@@ -1,7 +1,6 @@
 /* Global styles */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f8f8f8;
   margin: 0;
   padding: 0;
 }
@@ -21,6 +20,13 @@ body {
 
 .logo:hover {
   filter: drop-shadow(0 0 0.5rem #646cffaa);
+  animation: rotateLogo 1s linear forwards; /* Apply rotation animation on hover */
+}
+
+@keyframes rotateLogo {
+  100% {
+    transform: rotate(360deg); /* Rotate logo 360 degrees */
+  }
 }
 
 .logo.react:hover {
@@ -38,16 +44,16 @@ body {
 .header h1 {
   margin: 0;
   font-size: 2em;
-  color: #333;
 }
 
 /* Card styles */
 .card {
-  background-color: #fff;
+  background-color: var(--bg-color);
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   padding: 2em;
   margin-bottom: 20px;
+  color: var(--text-color);
 }
 
 /* Color picker container */
@@ -63,7 +69,6 @@ body {
 
 .container-title {
   font-size: 1.5em;
-  color: #333;
   margin-bottom: 10px;
 }
 
@@ -114,7 +119,7 @@ body {
   position: absolute;
   top: 5px;
   right: 5px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.7); /* Adjusted color for better visibility in dark mode */
   border: none;
   cursor: pointer;
   color: #fff;
@@ -125,7 +130,7 @@ body {
 
 .like-button:hover,
 .remove-button:hover {
-  background-color: #333;
+  background-color: rgba(0, 0, 0, 0.9); /* Adjusted color for better visibility in dark mode */
 }
 
 /* Uploaded image styles */
@@ -198,4 +203,71 @@ body {
   .card {
     padding: 1em;
   }
+}
+
+.color-picker-image-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.color-picker-container,
+.image-upload-container {
+  width: 48%;
+}
+
+.image-container {
+  width: 48%;
+}
+
+@media (max-width: 768px) {
+  .color-picker-image-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .color-picker-container,
+  .image-upload-container,
+  .image-container {
+    width: 100%;
+  }
+}
+
+/* Add this CSS */
+
+.favorite-button-container {
+  margin-top: 20px;
+}
+
+.add-favorite-button {
+  background-color: #61dafb;
+  color: #fff;
+  border: none;
+  padding: 10px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-favorite-button:hover {
+  background-color: #007bff;
+}
+
+.space {
+  width: 5px;
+}
+
+/* Light Theme */
+.light {
+  --bg-color: #ffffff;
+}
+
+/* Dark Theme */
+.dark {
+  --bg-color: #333333;
+  --text-color: #ffffff; /* Text color for dark mode */
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color, #333); /* Default text color */
 }

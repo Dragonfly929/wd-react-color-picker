@@ -1,11 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import reactLogo from './assets/react.svg';
 import colorsLogo from './assets/color.png';
 import './App.css';
 import { SketchPicker } from 'react-color';
+import Dexie from 'dexie';
 
 function App() {
-  const [color, setColor] = useState('#000000');
+  const [color, setColor] = useState(localStorage.getItem('selectedColor') || '#000000');
   const [image, setImage] = useState(null);
   const [favoriteColors, setFavoriteColors] = useState([]);
   const [popularColors, setPopularColors] = useState([
@@ -16,6 +17,24 @@ function App() {
   const [notification, setNotification] = useState(null);
   const [theme, setTheme] = useState('light'); // 'light' or 'dark'
   const imageRef = useRef(null);
+
+  useEffect(() => {
+    localStorage.setItem('selectedColor', color);
+  }, [color]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const db = new Dexie('colorPickerDB');
+      db.version(1).stores({
+        favoriteColors: '++id,color'
+      });
+      const favoriteColorsFromDB = await db.favoriteColors.toArray();
+      if (favoriteColorsFromDB) {
+        setFavoriteColors(favoriteColorsFromDB.map(favColor => favColor.color));
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -66,6 +85,13 @@ function App() {
       setTimeout(() => {
         setNotification(null);
       }, 2000);
+
+      // Save to IndexedDB
+      const db = new Dexie('colorPickerDB');
+      db.version(1).stores({
+        favoriteColors: '++id,color'
+      });
+      db.favoriteColors.add({ color });
     }
   };
 
@@ -76,24 +102,51 @@ function App() {
     setTimeout(() => {
       setNotification(null);
     }, 2000);
+
+    // Remove from IndexedDB
+    const db = new Dexie('colorPickerDB');
+    db.version(1).stores({
+      favoriteColors: '++id,color'
+    });
+    db.favoriteColors.where('color').equals(colorToRemove).delete();
   };
 
   const toggleLike = (index) => {
     const updatedPopularColors = [...popularColors];
     updatedPopularColors[index].liked = !updatedPopularColors[index].liked;
-
+    const likedColor = updatedPopularColors[index].color;
+  
     if (updatedPopularColors[index].liked) {
-      setFavoriteColors([...favoriteColors, updatedPopularColors[index].color]);
-      setNotification(`Liked ${updatedPopularColors[index].color}`);
+      setNotification(`Liked ${likedColor}`);
+      setFavoriteColors([...favoriteColors, likedColor]);
+      // Save to IndexedDB if not already in favorites
+      const db = new Dexie('colorPickerDB');
+      db.version(1).stores({
+        favoriteColors: '++id,color',
+        likedColors: '++id,color'
+      });
+      db.favoriteColors.add({ color: likedColor });
+      db.likedColors.add({ color: likedColor });
     } else {
-      setNotification(`Unliked ${updatedPopularColors[index].color}`);
+      setNotification(`Unliked ${likedColor}`);
+      const updatedFavorites = favoriteColors.filter((c) => c !== likedColor);
+      setFavoriteColors(updatedFavorites);
+      // Remove from IndexedDB if unliked
+      const db = new Dexie('colorPickerDB');
+      db.version(1).stores({
+        favoriteColors: '++id,color',
+        likedColors: '++id,color'
+      });
+      db.favoriteColors.where('color').equals(likedColor).delete();
+      db.likedColors.where('color').equals(likedColor).delete();
     }
-
+  
     setPopularColors(updatedPopularColors);
     setTimeout(() => {
       setNotification(null);
     }, 2000);
   };
+  
 
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');

@@ -1,15 +1,21 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import reactLogo from './assets/react.svg';
 import colorsLogo from './assets/color.png';
 import './App.css';
-import { SketchPicker } from 'react-color'; // Import SketchPicker from react-color
+import { SketchPicker } from 'react-color';
 
 function App() {
-  const [color, setColor] = useState('#000000'); // State to store selected color
-  const [image, setImage] = useState(null); // State to store uploaded image
-  const imageRef = useRef(null); // Reference to the image element
+  const [color, setColor] = useState('#000000');
+  const [image, setImage] = useState(null);
+  const [favoriteColors, setFavoriteColors] = useState([]);
+  const [popularColors, setPopularColors] = useState([
+    { color: '#FF0000', liked: false },
+    { color: '#00FF00', liked: false },
+    { color: '#0000FF', liked: false }
+  ]);
+  const [notification, setNotification] = useState(null);
+  const imageRef = useRef(null);
 
-  // Function to handle image upload
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -23,7 +29,6 @@ function App() {
     }
   };
 
-  // Function to handle image download
   const handleDownload = () => {
     if (image) {
       const canvas = document.createElement('canvas');
@@ -36,17 +41,13 @@ function App() {
         canvas.width = img.width;
         canvas.height = img.height;
 
-        // Set the background color
         ctx.fillStyle = color;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Draw the image
         ctx.drawImage(img, 0, 0);
 
-        // Convert canvas to data URL
         const dataURL = canvas.toDataURL('image/png');
 
-        // Create a temporary link to download the image
         const a = document.createElement('a');
         a.href = dataURL;
         a.download = 'edited_image.png';
@@ -55,6 +56,42 @@ function App() {
         document.body.removeChild(a);
       };
     }
+  };
+
+  const addToFavorites = () => {
+    if (!favoriteColors.includes(color)) {
+      setFavoriteColors([...favoriteColors, color]);
+      setNotification(`Added ${color} to Favorites`);
+      setTimeout(() => {
+        setNotification(null);
+      }, 2000);
+    }
+  };
+
+  const removeFromFavorites = (colorToRemove) => {
+    const updatedFavorites = favoriteColors.filter((c) => c !== colorToRemove);
+    setFavoriteColors(updatedFavorites);
+    setNotification(`Removed ${colorToRemove} from Favorites`);
+    setTimeout(() => {
+      setNotification(null);
+    }, 2000);
+  };
+
+  const toggleLike = (index) => {
+    const updatedPopularColors = [...popularColors];
+    updatedPopularColors[index].liked = !updatedPopularColors[index].liked;
+
+    if (updatedPopularColors[index].liked) {
+      setFavoriteColors([...favoriteColors, updatedPopularColors[index].color]);
+      setNotification(`Liked ${updatedPopularColors[index].color}`);
+    } else {
+      setNotification(`Unliked ${updatedPopularColors[index].color}`);
+    }
+
+    setPopularColors(updatedPopularColors);
+    setTimeout(() => {
+      setNotification(null);
+    }, 2000);
   };
 
   return (
@@ -71,9 +108,45 @@ function App() {
       <div className="card">
         <div className="color-picker-container">
           <SketchPicker
-            color={color} // Set color from state
-            onChange={(color) => setColor(color.hex)} // Handle color change and update state
+            color={color}
+            onChange={(color) => setColor(color.hex)}
           />
+          <button onClick={addToFavorites}>Add to Favorites</button>
+        </div>
+        {notification && (
+          <div className="notification">
+            {notification}
+          </div>
+        )}
+        <div className="favorites-container">
+          <h2>Your Favorite Colors</h2>
+          <div className="color-list">
+            {favoriteColors.map((favColor, index) => (
+              <div
+                key={index}
+                className="color-box"
+                style={{ backgroundColor: favColor }}
+                onClick={() => setColor(favColor)}>
+                <button className="remove-button" onClick={() => removeFromFavorites(favColor)} title="Remove from Favorites">
+                  <i className="fas fa-times"></i> Remove
+                </button>
+                <span className="color-name">{favColor}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="popular-container">
+          <h2>Popular Colors</h2>
+          <div className="color-list">
+            {popularColors.map((popColor, index) => (
+              <div className="color-box" style={{ backgroundColor: popColor.color }} key={index}>
+                <button className="like-button" onClick={() => toggleLike(index)} title={popColor.liked ? "Unlike" : "Like"}>
+                  {popColor.liked ? <i className="fas fa-heart heart-icon"></i> : <i className="far fa-heart heart-icon"></i>} {popColor.liked ? "Unlike" : "Like"}
+                </button>
+                <span className="color-name">{popColor.color}</span>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="image-upload-container">
           <input type="file" onChange={handleImageUpload} accept="image/*" />

@@ -23,6 +23,40 @@ function App() {
     }
   };
 
+  // Function to handle image download
+  const handleDownload = () => {
+    if (image) {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      const img = new Image();
+      img.src = image;
+
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        // Set the background color
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the image
+        ctx.drawImage(img, 0, 0);
+
+        // Convert canvas to data URL
+        const dataURL = canvas.toDataURL('image/png');
+
+        // Create a temporary link to download the image
+        const a = document.createElement('a');
+        a.href = dataURL;
+        a.download = 'edited_image.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      };
+    }
+  };
+
   return (
     <>
       <div>
@@ -55,6 +89,9 @@ function App() {
               />
             </div>
           )}
+        </div>
+        <div className="download-container">
+          {image && <button onClick={handleDownload}>Download Image</button>}
         </div>
       </div>
       <p className="read-the-docs">

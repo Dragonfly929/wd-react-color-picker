@@ -14,6 +14,7 @@ function App() {
     { color: '#0000FF', liked: false }
   ]);
   const [notification, setNotification] = useState(null);
+  const [theme, setTheme] = useState('light'); // 'light' or 'dark'
   const imageRef = useRef(null);
 
   const handleImageUpload = (e) => {
@@ -94,8 +95,12 @@ function App() {
     }, 2000);
   };
 
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
+
   return (
-    <div className="app-container">
+    <div className={`app-container ${theme}`}>
       <header className="header">
         <a href="https://react.dev" target="_blank" rel="noopener noreferrer">
           <img src={reactLogo} className="logo react" alt="React logo" />
@@ -106,12 +111,37 @@ function App() {
         </a>
       </header>
       <div className="card">
-        <div className="color-picker-container">
-          <SketchPicker
-            color={color}
-            onChange={(color) => setColor(color.hex)}
-          />
-          <button onClick={addToFavorites}>Add to Favorites</button>
+        <div className="color-picker-image-container">
+          <div className="color-picker-container">
+            <SketchPicker
+              color={color}
+              onChange={(color) => setColor(color.hex)}
+            />
+          </div>
+          <div className="space"></div>
+          <div className="image-upload-container">
+            <input type="file" onChange={handleImageUpload} accept="image/*" />
+          </div>
+          {image && (
+            <div className="image-container">
+              <div className="image-wrapper" style={{ backgroundColor: color }}>
+                <img
+                  src={image}
+                  alt="Uploaded"
+                  className="uploaded-image"
+                  ref={imageRef}
+                />
+              </div>
+              <div className="download-container">
+                {image && <button onClick={handleDownload}>Download Image</button>}
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="favorite-button-container">
+          <button className="add-favorite-button" onClick={addToFavorites}>
+            <i className="fas fa-star"></i> Add to Favorites
+          </button>
         </div>
         {notification && (
           <div className="notification">
@@ -148,23 +178,10 @@ function App() {
             ))}
           </div>
         </div>
-        <div className="image-upload-container">
-          <input type="file" onChange={handleImageUpload} accept="image/*" />
-        </div>
-        <div className="image-container">
-          {image && (
-            <div className="image-wrapper" style={{ backgroundColor: color }}>
-              <img
-                src={image}
-                alt="Uploaded"
-                className="uploaded-image"
-                ref={imageRef}
-              />
-            </div>
-          )}
-        </div>
-        <div className="download-container">
-          {image && <button onClick={handleDownload}>Download Image</button>}
+        <div className="theme-toggle-container">
+          <button className="theme-toggle-button" onClick={toggleTheme}>
+            {theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+          </button>
         </div>
       </div>
       <p className="read-the-docs">

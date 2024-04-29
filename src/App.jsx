@@ -58,16 +58,16 @@ function App() {
   };
 
   return (
-    <>
-      <div>
+    <div className="app-container">
+      <header className="header">
         <a href="https://react.dev" target="_blank" rel="noopener noreferrer">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
+        <h1>React + Color</h1>
         <a href="https://vitejs.dev" target="_blank" rel="noopener noreferrer">
           <img src={colorsLogo} className="logo" alt="Colors logo" />
         </a>
-      </div>
-      <h1>React + Color</h1>
+      </header>
       <div className="card">
         <div className="color-picker-container">
           <SketchPicker
@@ -97,7 +97,7 @@ function App() {
       <p className="read-the-docs">
         Click on the React and Colors logos to learn more
       </p>
-    </>
+    </div>
   );
 }
 

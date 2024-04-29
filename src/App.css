@@ -5,17 +5,20 @@
   text-align: center;
 }
 
+/* Logo styles */
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #646cffaa); /* Add drop shadow on hover */
 }
+
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em #61dafbaa); /* Add drop shadow on hover for React logo */
 }
 
 @keyframes logo-spin {
@@ -29,103 +32,33 @@
 
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+    animation: logo-spin infinite 20s linear; /* Apply rotation animation to the second logo */
   }
 }
 
-/* .card {
-  padding: 2em;
-} */
-
+/* Text styles */
 .read-the-docs {
-  color: #888;
+  color: #888; /* Set color for instructional text */
 }
 
-/* ---------------------- */
+/* Color picker container */
 .color-picker-container {
-  margin-bottom: 20px;
+  margin-bottom: 20px; /* Add margin below color picker container */
 }
 
+/* Image upload container */
 .image-upload-container {
-  margin-bottom: 10px;
+  margin-bottom: 10px; /* Add margin below image upload container */
 }
 
-/* adding image */
+/* Uploaded image styles */
 .uploaded-image {
-  max-width: 100%;
-  max-height: 200px;
-  background-color: transparent;
+  max-width: 100%; /* Set maximum width to 100% */
+  max-height: 200px; /* Set maximum height to 200px */
+  background-color: transparent; /* Make the background transparent */
 }
 
-.image-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.3); /* Adjust the opacity as needed */
-}
-
-/* adjusting added image */
-.card {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center the content horizontally */
-}
-
-.color-picker-container {
-  margin-bottom: 20px;
-}
-
-.image-upload-container {
-  margin-bottom: 10px;
-}
-
-.image-container {
-  display: flex;
-  justify-content: center; /* Center the image horizontally */
-}
-
-.image-wrapper {
-  position: relative;
-}
-
-/* bg color  */
-.card {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center the content horizontally */
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-.color-picker-container {
-  margin-bottom: 20px;
-}
-
-.image-upload-container {
-  margin-bottom: 10px;
-}
-
-.uploaded-image {
-  max-width: 100%;
-  max-height: 200px;
-  background-color: transparent;
-}
-
-.image-container {
-  display: flex;
-  justify-content: center; /* Center the image horizontally */
-}
-
-.image-wrapper {
-  position: relative;
-}
-
+/* Image overlay */
 .image-wrapper::before {
   content: '';
   position: absolute;
@@ -136,20 +69,53 @@
   background-color: rgba(0, 0, 0, 0.3); /* Overlay for uploaded image */
 }
 
-/* Apply color to the background of the uploaded image */
+/* Card styles */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the content horizontally */
+  padding: 2em;
+}
+
+/* Background color for uploaded image */
 .image-wrapper {
+  position: relative;
   background-color: #000000; /* Default background color */
 }
 
 /* Center the image horizontally */
 .image-container {
   display: flex;
-  justify-content: center;
+  justify-content: center; /* Center the image horizontally */
 }
 
-/* download */
+/* Download button container */
 .download-container {
-  margin-top: 20px;
+  margin-top: 20px; /* Add margin above download button */
 }
 
+/* Header styles */
+.app-container {
+  max-width: 800px; /* Set maximum width for header */
+  margin: 0 auto; /* Center the header horizontally */
+  padding: 20px;
+  text-align: center;
+}
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px; /* Add margin below header */
+}
+
+.header h1 {
+  margin: 0 20px; /* Add margin around header text */
+}
+
+/* Card container */
+.card {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the content horizontally */
+}

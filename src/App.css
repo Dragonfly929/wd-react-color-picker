@@ -146,3 +146,10 @@
   display: flex;
   justify-content: center;
 }
+
+/* download */
+.download-container {
+  margin-top: 20px;
+}
+
+
